@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Station {
+  StationID     Int      @id // int NOT NULL (primary key)
+  StationNo     String   // varchar NOT NULL
+  StationName   String?  // nvarchar NULL
+  Latitude      Float?   // float NULL
+  Longitude     Float?   // float NULL
+  Elevation     Float?   // float NULL
+  ProvinceID    Int?     // int NULL
+  Status        Boolean? // bit NULL
+  CreatedAt     DateTime? @db.DateTime // datetime NULL
+  RegID         Int?     // int NULL
+  Address       String?  // nvarchar NULL
+  StationNameVN String?  // nvarchar NULL
+  Project       Int?     // int NULL (was String? - FIXED)
+  AreaRiver     String?  // nchar NULL
+
+  @@map("Station")
+}
+
+model StationView {
+  id            Int     @id @default(autoincrement()) // Virtual primary key
+  StationID     String? @db.VarChar(Max)
+  StationName   String? @db.VarChar(Max)
+  Latitude      Float?
+  Longitude     Float?
+
+  @@map("StationView")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Rain10m {
+  StationID String?   @db.VarChar(50)
+  Realtime  DateTime? @db.DateTime
+  DataValue Float?
+  QC        String?   @db.VarChar(10)
+
+  @@ignore
+}
+
+model Rain1h {
+  ID               Int       @id @default(autoincrement()) // Primary key
+  StationID        Int?      // Đúng kiểu Int
+  DtDate           DateTime? @db.DateTime // Đúng tên cột
+  Year             Int?      @db.Int
+  Month            Int?      @db.Int
+  Day              Int?      @db.Int
+  Hour             Int?      @db.Int
+  Value            Int?      @db.Int // Sửa thành Int thay vì Float
+  QCFlag           Int?      @db.Int // Sửa thành Int
+  SearchDatetime   DateTime? @db.DateTime
+  CreatedAt        DateTime? @db.DateTime
+  StationNo        String?   @db.VarChar(50)
+
+  @@map("Rain1h")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Rain24h {
+  StationID String?   @db.VarChar(50)
+  Realtime  DateTime? @db.DateTime
+  DataValue Float?
+  QC        String?   @db.VarChar(10)
+
+  @@ignore
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B61D4A0C227") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
+}
