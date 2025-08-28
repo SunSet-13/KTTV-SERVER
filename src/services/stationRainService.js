@@ -38,7 +38,7 @@ export async function getStationRainData(filters = {}) {
       whereClause += ` AND r.Hour <= ${parseInt(endTime)}`;
     }
 
-    // Sử dụng raw query để join 2 bảng Station và Rain1h dựa vào StationNo
+    // Sử dụng raw query để join 2 bảng Station và Rain1h dựa vào StationNo hoặc StationID
     const query = `
       SELECT TOP ${limit}
         s.StationID,
@@ -55,7 +55,7 @@ export async function getStationRainData(filters = {}) {
         r.Hour,
         r.Value as RainValue
       FROM Station s
-      INNER JOIN Rain1h r ON s.StationNo = r.StationNo
+      INNER JOIN Rain1h r ON (s.StationNo = r.StationNo OR s.StationID = r.StationID)
       ${whereClause}
       ORDER BY r.DtDate DESC, r.Hour DESC
     `;

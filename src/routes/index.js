@@ -5,6 +5,8 @@ import mapController from "../controllers/mapController.js";
 import chartController from "../controllers/chartController.js";
 import stationDataController from '../controllers/stationDataController.js';
 import stationRainController from '../controllers/stationRainController.js';
+import provinceRoutes from './provinceRoutes.js';
+import rainTimeRoutes from './rainTimeRoutes.js';
 
 const Router = express.Router()
 
@@ -21,4 +23,6 @@ export const routes = (app) => {
   app.get("/api/chart", chartController);
   app.get("/api/station-data", stationDataController);
   app.get("/api/station-rain", stationRainController);
+  app.use("/api/provinces", provinceRoutes);
+  app.use("/api/rain-time", rainTimeRoutes);
 };
